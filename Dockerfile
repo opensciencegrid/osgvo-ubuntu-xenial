@@ -2,6 +2,7 @@ FROM ubuntu:xenial
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         build-essential \
+        lsb-release \
         curl \
         libfreetype6-dev \
         libpng12-dev \
