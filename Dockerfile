@@ -138,7 +138,8 @@ RUN cd /tmp && \
 # stashcp
 RUN pip install --upgrade pip==9.0.3 && \
     pip install setuptools && \
-    pip install stashcp
+    pip install stashcp && \
+    cp /usr/local/caches.json /usr/local/lib/python2.7/dist-packages/caches.json
 
 # required directories
 RUN for MNTPOINT in \
