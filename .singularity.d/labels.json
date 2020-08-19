@@ -1,0 +1,7 @@
+{
+    "opensciencegrid.name": "Ubuntu 16.04",
+    "opensciencegrid.description": "Ubuntu 16.04 (Xenial) base image",
+    "opensciencegrid.url": "https://www.ubuntu.com",
+    "opensciencegrid.category": "Base",
+    "opensciencegrid.definition_url": "https://github.com/opensciencegrid/osgvo-ubuntu-xenial"
+}

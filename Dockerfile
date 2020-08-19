@@ -1,5 +1,11 @@
 FROM ubuntu:xenial
 
+LABEL opensciencegrid.name="Ubuntu 16.04"
+LABEL opensciencegrid.description="Ubuntu 16.04 (Xenial) base image"
+LABEL opensciencegrid.url="https://www.ubuntu.com"
+LABEL opensciencegrid.category="Base"
+LABEL opensciencegrid.definition_url="https://github.com/opensciencegrid/osgvo-ubuntu-xenial"
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
         build-essential \
         cmake \
@@ -81,65 +87,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN mkdir -p /etc/grid-security && \
     ln -f -s /cvmfs/oasis.opensciencegrid.org/mis/certificates /etc/grid-security/certificates
 
-# root
-RUN cd /tmp && \
-    git clone https://github.com/root-project/root /usr/src/root && \
-    cd /usr/src/root && \
-    git checkout v6-12-06 && \ 
-    mkdir /tmp/build && \
-    cd /tmp/build && \
-    cmake /usr/src/root \
-        -DCMAKE_INSTALL_PREFIX=/usr \
-        -Dall=ON \
-        -Dcxx14=ON \
-        -Dfail-on-missing=ON \
-        -Dgnuinstall=ON \
-        -Drpath=ON \
-        -Dbuiltin_afterimage=OFF \
-        -Dbuiltin_ftgl=OFF \
-        -Dbuiltin_gl2ps=OFF \
-        -Dbuiltin_glew=OFF \
-        -Dbuiltin_unuran=ON \
-        -Dbuiltin_vc=ON \
-        -Dbuiltin_vdt=ON \
-        -Dbuiltin_veccore=ON \
-        -Dbuiltin_xrootd=ON \
-        -Darrow=OFF \
-        -Dcastor=OFF \
-        -Dchirp=OFF \
-        -Dgeocad=OFF \
-        -Dglite=OFF \
-        -Dhdfs=OFF \
-        -Dmonalisa=OFF \
-        -Doracle=OFF \
-        -Dpythia6=OFF \
-        -Drfio=OFF \
-        -Dsapdb=OFF \
-        -Dsrp=OFF \
-        && \
-    cmake --build . -- -j4 && \
-    cmake --build . --target install && \
-    cd /tmp && \
-    rm -rf /tmp/buil /usr/src/root
-
-# root
-RUN cd /tmp && \
-    wget -nv http://xrootd.org/download/v4.7.1/xrootd-4.7.1.tar.gz && \
-    tar xzf xrootd-4.7.1.tar.gz && \
-    cd xrootd-4.7.1 && \
-    mkdir build && \
-    cd  build && \
-    cmake /tmp/xrootd-4.7.1 -DCMAKE_INSTALL_PREFIX=/usr -DENABLE_PERL=FALSE && \
-    make && \
-    make install && \
-    cd /tmp && \
-    rm -rf xrootd-4.7.1.tar.gz xrootd-4.7.1
-
 # stashcp
 RUN pip install --upgrade pip==9.0.3 && \
     pip install setuptools && \
-    pip install stashcp && \
-    cp /usr/local/caches.json /usr/local/lib/python2.7/dist-packages/caches.json
+    pip install stashcp
 
 # required directories
 RUN for MNTPOINT in \
@@ -162,11 +113,6 @@ RUN mkdir -p /host-libs /etc/OpenCL/vendors
 
 # some extra singularity stuff
 COPY .singularity.d /.singularity.d
-RUN cd / && \
-    ln -s .singularity.d/actions/exec .exec && \
-    ln -s .singularity.d/actions/run .run && \
-    ln -s .singularity.d/actions/test .shell && \
-    ln -s .singularity.d/runscript singularity
 
 # build info
 RUN echo "Timestamp:" `date --utc` | tee /image-build-info.txt
